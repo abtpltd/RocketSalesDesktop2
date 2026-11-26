@@ -1,0 +1,166 @@
+# Builds the RocketSales Desktop installer (NSIS, Windows) and publishes it as a GitHub Release asset.
+# The file name carries the run number, e.g. RocketSales-Desktop-0.1.0-run42-setup.exe, so every build is unique.
+# Nothing here needs a secret: the installer is unsigned (see docs/02-handover.md, "Code signing").
+name: desktop-windows
+
+# Builds when someone clicks "Run workflow" (Actions tab), and on pushes to the desktop-security branch.
+on:
+  workflow_dispatch:
+  push:
+    branches: [desktop-security]
+
+permissions:
+  contents: write   # needed to create the release
+
+concurrency:
+  group: desktop-windows-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Rust toolchain
+        run: rustup toolchain install stable --profile minimal
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: cargo-${{ runner.os }}-${{ hashFiles('src-tauri/Cargo.lock') }}
+          restore-keys: cargo-${{ runner.os }}-
+
+      - name: Install packages
+        run: npm ci
+
+      - name: Front-end checks
+        run: |
+          npm run typecheck
+          npm test
+
+      - name: Core (Rust) tests
+        working-directory: src-tauri
+        run: cargo test -p rocketsales-core --locked
+
+      # The restored cache is newer than the fresh checkout, so cargo would treat the app as already built and keep the
+      # old screens inside it (run 12 came out identical to run 11). Always rebuild our own crates and the installer;
+      # the cached dependencies still save most of the time.
+      - name: Rebuild the app itself (not the cached copy)
+        working-directory: src-tauri
+        shell: pwsh
+        run: |
+          cargo clean --release -p rocketsales-desktop -p rocketsales-core
+          if (Test-Path target/release/bundle) { Remove-Item -Recurse -Force target/release/bundle }
+
+      # Every build gets its own version, major.minor from tauri.conf.json and the run number as the last part
+      # (0.2.15 for run 15), so installed apps can tell that an update is newer.
+      # Automatic updates switch on by themselves once the three secrets below exist in this repo
+      # (Settings -> Secrets and variables -> Actions). Without them the build is the same as before.
+      - name: Version and update signing
+        id: ver
+        shell: pwsh
+        env:
+          HAS_SIGNING_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY != '' }}
+          HAS_DEPLOY_KEY: ${{ secrets.UPDATES_DEPLOY_KEY != '' }}
+        run: |
+          $base = (Get-Content src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
+          $parts = $base.Split('.')
+          $version = "$($parts[0]).$($parts[1]).${{ github.run_number }}"
+          $updates = ($env:HAS_SIGNING_KEY -eq 'true') -and ($env:HAS_DEPLOY_KEY -eq 'true')
+          $config = @{ version = $version; bundle = @{ createUpdaterArtifacts = $updates } } | ConvertTo-Json -Depth 3
+          Set-Content -Path src-tauri/ci.conf.json -Value $config -Encoding utf8
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "updates=$($updates.ToString().ToLower())" >> $env:GITHUB_OUTPUT
+          Write-Host "Version $version; automatic updates: $updates"
+
+      - name: Build the installer
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: npm run tauri -- build --bundles nsis --config src-tauri/ci.conf.json
+
+      - name: Check the installer carries this build's screens
+        shell: pwsh
+        run: |
+          $html = Get-Content dist/index.html -Raw
+          $js = [regex]::Match($html, 'assets/index-[A-Za-z0-9_-]+\.js').Value
+          if (-not $js) { throw 'Could not read the screen bundle name from dist/index.html.' }
+          $exe = Get-ChildItem -Path src-tauri/target/release -Filter *.exe | Where-Object { $_.Name -notlike '*setup*' } | Select-Object -First 1
+          $text = [System.Text.Encoding]::ASCII.GetString([System.IO.File]::ReadAllBytes($exe.FullName))
+          if (-not $text.Contains($js)) { throw "The app does not contain $($js), so the screens were not rebuilt." }
+          Write-Host "The app contains $($js)"
+
+      - name: Name the installer by version and run number
+        id: pack
+        shell: pwsh
+        run: |
+          $version = "${{ steps.ver.outputs.version }}"
+          $source = Get-ChildItem -Path src-tauri/target/release/bundle/nsis -Filter *-setup.exe | Select-Object -First 1
+          if (-not $source) { throw 'The NSIS installer was not produced.' }
+          $name = "RocketSales-Desktop-$version-run${{ github.run_number }}-setup.exe"
+          Copy-Item $source.FullName $name
+          $hash = (Get-FileHash $name -Algorithm SHA256).Hash.ToLower()
+          "$hash  $name" | Set-Content -Encoding ascii "$name.sha256"
+          "name=$name" >> $env:GITHUB_OUTPUT
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Publish release asset
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "desktop-run-${{ github.run_number }}"
+          $name = "${{ steps.pack.outputs.name }}"
+          gh release create $tag $name "$name.sha256" `
+            --repo "${{ github.repository }}" `
+            --target "${{ github.sha }}" `
+            --title "RocketSales Desktop ${{ steps.pack.outputs.version }} (build ${{ github.run_number }})" `
+            --notes "Windows installer, unsigned. SHA-256 is in the .sha256 file. Built from commit ${{ github.sha }}."
+          if ($LASTEXITCODE -ne 0) { throw 'Creating the release failed.' }
+
+      # Puts the signed installer and latest.json in the public repo abtpltd/RocketSalesDesktop-updates, where installed
+      # apps look for updates. Only the installer goes there, never source code.
+      - name: Publish the update
+        if: steps.ver.outputs.updates == 'true'
+        shell: bash
+        env:
+          UPDATES_DEPLOY_KEY: ${{ secrets.UPDATES_DEPLOY_KEY }}
+          VERSION: ${{ steps.ver.outputs.version }}
+          NAME: ${{ steps.pack.outputs.name }}
+        run: |
+          set -euo pipefail
+          key="$PWD/.updates_key"  # a Unix-style path; $RUNNER_TEMP is a Windows path that ssh misreads here
+          printf '%s\n' "$UPDATES_DEPLOY_KEY" > "$key"
+          chmod 600 "$key"
+          export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          git clone --depth 1 git@github.com:abtpltd/RocketSalesDesktop-updates.git updates
+          sig=$(ls src-tauri/target/release/bundle/nsis/*-setup.exe.sig | head -1)
+          mkdir -p "updates/releases/$VERSION"
+          cp "$NAME" "updates/releases/$VERSION/$NAME"
+          url="https://raw.githubusercontent.com/abtpltd/RocketSalesDesktop-updates/master/releases/$VERSION/$NAME"
+          python -c "import json;r=json.load(open('$GITHUB_WORKSPACE/src/assets/releases.json'));print('\n'.join('- '+n for n in r[0]['notes']))" > "$PWD/notes.txt" 2>/dev/null || echo "RocketSales desktop $VERSION" > "$PWD/notes.txt"
+          python - "$VERSION" "$url" "$sig" "$PWD/notes.txt" > updates/latest.json <<'PY'
+          import datetime, json, sys
+          version, url, sig = sys.argv[1], sys.argv[2], open(sys.argv[3]).read().strip()
+          notes = open(sys.argv[4], encoding='utf-8').read().strip()[:1500] or 'RocketSales desktop ' + version
+          print(json.dumps({'version': version, 'notes': notes,
+                            'pub_date': datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+                            'platforms': {'windows-x86_64': {'signature': sig, 'url': url}}}, indent=2))
+          PY
+          cd updates
+          git config user.name "RocketSales build"
+          git config user.email "build@users.noreply.github.com"
+          git add -A
+          git commit -m "Desktop $VERSION (build ${{ github.run_number }})"
+          git push origin HEAD:master
+          rm -f "$key"

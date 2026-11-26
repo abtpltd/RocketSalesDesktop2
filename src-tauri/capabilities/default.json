@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Only the app's own main window may talk to the Rust side. The classic window shows the company's website and gets no access.",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

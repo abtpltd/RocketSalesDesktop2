@@ -1,0 +1,45 @@
+{
+  "name": "rocketsales-desktop",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:mock": "VITE_MOCK=1 vite",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^6.3.4",
+    "@tanstack/react-query": "^5.104.5",
+    "@tauri-apps/api": "^2.12.4",
+    "antd": "^6.6.7",
+    "dayjs": "^1.11.23",
+    "echarts": "^6.1.0",
+    "fflate": "^0.8.2",
+    "html-to-image": "^1.11.13",
+    "jspdf": "^2.5.2",
+    "leaflet": "^1.9.4",
+    "papaparse": "^5.7.0",
+    "pmtiles": "^3.2.1",
+    "pptxgenjs": "^3.12.0",
+    "protomaps-leaflet": "^5.1.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "read-excel-file": "^9.3.12"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.4",
+    "@types/leaflet": "^1.9.12",
+    "@types/papaparse": "^5.5.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "jszip": "^3.10.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}
