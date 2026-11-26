@@ -1,0 +1,188 @@
+[
+  {
+    "id": "r20",
+    "date": "2026-10-27",
+    "title": "More ways to see your charts",
+    "notes": [
+      "Every dashboard chart has a More charts menu: heatmap of busy days, area, stacked area, smooth and step lines, 100% stacked, pie, rose, lollipop, funnel, radar and sunburst",
+      "Tick Show values on the chart, Average line (with highest and lowest marked) or Compare with last month (dotted line behind)",
+      "Pick a colour set for each chart; your choice is saved with the view",
+      "The lock screen now shows the RocketSales logo, the time, the quote of the day and moving waves in your theme colour",
+      "Freeze a column in any grid: hover a column title and click the small pin. It stays in view while you scroll sideways, and is remembered for next time"
+    ]
+  },
+  {
+    "id": "r19",
+    "date": "2026-10-27",
+    "title": "Faster lists: your computer keeps its own copy",
+    "notes": [
+      "Customers, Doctors, Products and Prospects are copied to this computer once; afterwards only what changed is fetched, so searching and paging are instant and the lists keep working offline",
+      "After 12 hours working offline the app asks for your password again",
+      "Your provider can allow a remote support session for a few hours, so support can connect",
+      "The presentations list has a Present button on every row, to play a presentation without opening the editor"
+    ]
+  },
+  {
+    "id": "r18",
+    "date": "2026-10-27",
+    "title": "Stronger protection for your screen and data",
+    "notes": [
+      "The app window is hidden from screenshots and screen recorders",
+      "If a screen-recording or remote-control program is running, the screen is covered, your administrator is told, and you are signed out if it is not closed within 30 seconds",
+      "The app locks after 10 minutes without use (5 minutes on a saved offline copy); enter your password to continue",
+      "Copied text is cleared from the clipboard after a minute; your administrator can stop some roles from copying or printing"
+    ]
+  },
+  {
+    "id": "r17",
+    "date": "2026-10-27",
+    "title": "Presentations: Latest or Static, folders, audiences and automatic backup",
+    "notes": [
+      "Each presentation is Latest (live pictures) or Static (frozen); every picture and slide shows a badge, also in PDF and PowerPoint",
+      "Freeze a copy, automatic dated copies before numbers are refreshed, and a comparison slide against your last frozen copy",
+      "Audience, weekly or monthly period, folders, tags, search, Recent and pins; agenda, section and sign-off slides",
+      "New Presentations entry in the left menu; a warning names live pictures that cannot be refreshed",
+      "Automatic locked backup to Documents\\RocketSales\\Presentations (last 5 files, at most once a day) and Back up all"
+    ]
+  },
+  {
+    "id": "r16",
+    "date": "2026-10-27",
+    "title": "Presentations: live pictures, PowerPoint, notes, backup and sharing",
+    "notes": [
+      "Pictures you add from a page are now live: when you present, the app retakes them from their page so the numbers are current (every 5 minutes while presenting, or press R). You can keep any picture as it is",
+      "Save a presentation as a PowerPoint file; titles, text and speaker notes stay editable",
+      "Speaker notes for each slide (press N while presenting), a logo and footer line for the whole presentation, and ready-made starter presentations",
+      "Back up all your presentations to one file, optionally locked with a password, and share a presentation with a colleague as a file; they open it with Open a file and get their own copy"
+    ]
+  },
+  {
+    "id": "r15",
+    "date": "2026-10-27",
+    "title": "Presentations, best-fit text and one computer per person",
+    "notes": [
+      "My presentations: click Add to presentation in the top bar, pick any card, chart or table, and put it on a slide; add titles and text, change fonts, size, colour, alignment and layout, then play full screen or save as PDF or picture. Presentations are yours alone and stay on this computer",
+      "On first use on a new kind of screen the app suggests the text size that fits best; very large screens keep content to a readable width",
+      "Each computer now proves it is the one registered for your account; RocketSales sets how many computers a person may use (default one) and moves you to a new computer on request"
+    ]
+  },
+  {
+    "id": "r14",
+    "date": "2026-10-26",
+    "title": "Data window",
+    "notes": [
+      "Slide panels (record details, orders, forms) now have a title bar in your theme colour",
+      "If your company is limited to recent data, reports and orders show only that period and say \"Your company is allowed data from ...\""
+    ]
+  },
+  {
+    "id": "r13",
+    "date": "2026-10-26",
+    "title": "What is new, full screen",
+    "notes": [
+      "What is new opens as a full-screen page instead of a small dialog; Back to the app or Esc returns you"
+    ]
+  },
+  {
+    "id": "r12",
+    "date": "2026-10-26",
+    "title": "A new quote at every sign-in",
+    "notes": [
+      "The sign-in screen shows a different quote each time it opens; every quote is shown once before any repeats",
+      "App settings has a switch for one quote a day instead; the dashboard shows the same quote you saw at sign-in",
+      "A thought set by your company on the web still comes first"
+    ]
+  },
+  {
+    "id": "r11",
+    "date": "2026-10-26",
+    "title": "App users and roles",
+    "notes": [
+      "App User list: Location and Transfer stock location columns removed; a reset-session icon (asks for Reset remarks) and then an edit icon sit at the end of each row",
+      "Add and the status switch are for the support account only; the new-user password is now required and its box is full width",
+      "Backoffice Roles: turning off the last page in a section also turns the section off"
+    ]
+  },
+  {
+    "id": "r10",
+    "date": "2026-10-26",
+    "title": "Battery tag and copyright line",
+    "notes": [
+      "Attendance shows the phone battery as its own tag: green at 95% or more, amber 20 to 94%, red below 20%; a late start time still shows red by itself",
+      "Ask RocketPilot who started with low battery",
+      "The sign-in page shows the company copyright line and the app version",
+      "What is new has RocketPilot on the left and the text on the right"
+    ]
+  },
+  {
+    "id": "r9",
+    "date": "2026-10-26",
+    "title": "A livelier What is new",
+    "notes": [
+      "What is new now follows your app theme and shows RocketPilot celebrating, with the newest release on top",
+      "Touch RocketPilot's picture to see his moods one by one, including a celebration"
+    ]
+  },
+  {
+    "id": "r8",
+    "date": "2026-10-26",
+    "title": "Meet RocketPilot",
+    "notes": [
+      "RocketPilot now has a face: a friendly robot who greets you, thinks while he works, talks while he answers, and looks alert or pleased to match the answer",
+      "He also appears on the dashboard card; you can hide him with the Hide link in the panel",
+      "Fix: the Windows build error that stopped the What is new screen from reaching you"
+    ]
+  },
+  {
+    "id": "r7",
+    "date": "2026-10-26",
+    "title": "Forecasts and What is new",
+    "notes": [
+      "RocketPilot AI forecasts: ask who will miss target this month, with the likely month-end sales and what is needed per day",
+      "RocketPilot AI: customers about to go cold, judged against how often each is usually visited",
+      "What is new: click the version number to read these notes any time, with a dot until read",
+      "Recent and Most asked keep only questions it understood, with a cross to remove one",
+      "A quote of the day from well-known sales coaches on the sign-in screen and dashboard (your company's own thought still comes first)"
+    ]
+  },
+  {
+    "id": "r6",
+    "date": "2026-10-26",
+    "title": "RocketPilot AI grows, and release notes",
+    "notes": [
+      "RocketPilot AI: ask about a customer or a person and get their last visit, amount owed and stock expiring",
+      "RocketPilot AI: morning and end-of-day briefings, weekly and monthly review, visit plan",
+      "RocketPilot AI: reminders, most asked questions, print an answer, a count of what needs attention on the button",
+      "Update alerts: a sound and these notes whenever a new version is ready, checked every half hour",
+      "What is new: click the version number at the bottom of the menu to read these notes again"
+    ]
+  },
+  {
+    "id": "r5",
+    "date": "2026-10-26",
+    "title": "RocketPilot AI",
+    "notes": [
+      "RocketPilot AI answers questions from the reports saved on this computer, with no server call",
+      "Side, Half and Full panel views; a list of questions it could not answer for the administrator",
+      "Company settings for the limits, pinned questions and who can use it"
+    ]
+  },
+  {
+    "id": "r4",
+    "date": "2026-10-26",
+    "title": "Row colours",
+    "notes": [
+      "Attendance and other reports colour rows by performance (late starts, absences, targets, ageing, expiry)",
+      "Colours button: choose your own limits or return to the company's"
+    ]
+  },
+  {
+    "id": "r3",
+    "date": "2026-10-25",
+    "title": "Maps, SMS and look",
+    "notes": [
+      "Map View: check a customer's tag against where visits happened",
+      "Promotional SMS screen; text size and clearer colours in every theme; new logo"
+    ]
+  }
+]
